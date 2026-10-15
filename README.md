@@ -51,6 +51,17 @@ Créés par `npm run db:seed` (identifiants dans [`scripts/test-users.mjs`](scri
 | `npm run db:migrate` | applique `supabase/migrations/*.sql` (rejouable sans risque) |
 | `npm run db:seed` | **efface** et recharge les données de test |
 | `npm run test:rls` | vérifie les droits d'accès (visiteuse / coiffeuse / admin) |
+| `npm run test:creneaux` | vérifie le calcul des créneaux (pauses, fermetures, absences, délais, heure d'été) |
+
+## Réservation : règles métier
+
+- Créneaux calculés côté serveur ([`src/lib/availability.ts`](src/lib/availability.ts)) : horaires du salon
+  et de chaque coiffeuse, pause déjeuner, fermetures, absences, rendez-vous existants et durée de la prestation.
+- Réservation possible de « maintenant + délai minimum » (2 h) à « aujourd'hui + délai maximum » (60 j), réglables.
+- « Peu importe la coiffeuse » : attribution à la coiffeuse la moins chargée ce jour-là.
+- Double réservation impossible : vérification serveur + contrainte d'exclusion dans la base.
+- Chaque rendez-vous a un lien secret `/rdv/<jeton>` pour le retrouver et l'annuler (jusqu'à 24 h avant, réglable).
+- Les clientes sont reconnues par leur numéro de téléphone (pas de compte).
 
 ## Organisation du code
 

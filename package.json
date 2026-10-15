@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:migrate": "node --env-file=.env.local scripts/db.mjs migrate",
     "db:seed": "node --env-file=.env.local scripts/db.mjs seed",
-    "test:rls": "node --env-file=.env.local scripts/test-rls.mjs"
+    "test:rls": "node --env-file=.env.local scripts/test-rls.mjs",
+    "test:creneaux": "tsx --env-file=.env.local scripts/test-availability.mts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -28,6 +29,7 @@
     "eslint-config-next": "16.4.2",
     "pg": "^8.23.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

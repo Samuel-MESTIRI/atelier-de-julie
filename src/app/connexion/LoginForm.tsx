@@ -1,15 +1,17 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { login, type LoginState } from "./actions";
 
 export function LoginForm() {
   const [state, action, pending] = useActionState<LoginState, FormData>(login, {});
+  const [email, setEmail] = useState(""); // gardé en cas d'erreur de mot de passe
 
   return (
     <form action={action} className="space-y-4">
       <div>
         <label htmlFor="email" className="label">Email</label>
-        <input id="email" name="email" type="email" autoComplete="email" required className="input" />
+        <input id="email" name="email" type="email" autoComplete="email" required className="input"
+               value={email} onChange={(e) => setEmail(e.target.value)} />
       </div>
       <div>
         <label htmlFor="password" className="label">Mot de passe</label>
