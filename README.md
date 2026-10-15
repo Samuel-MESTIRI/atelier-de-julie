@@ -63,6 +63,23 @@ Créés par `npm run db:seed` (identifiants dans [`scripts/test-users.mjs`](scri
 - Chaque rendez-vous a un lien secret `/rdv/<jeton>` pour le retrouver et l'annuler (jusqu'à 24 h avant, réglable).
 - Les clientes sont reconnues par leur numéro de téléphone (pas de compte).
 
+## Back-office (`/admin`)
+
+| Écran | Gérante (Julie) | Coiffeuse |
+|---|---|---|
+| Planning jour / semaine | tout le salon, filtre par coiffeuse | son planning uniquement |
+| Fiche rendez-vous | statut venue / absente / annulé | consultation |
+| + Rendez-vous (pris par téléphone) | ✓ (sans délai minimum) | — |
+| Clientes (recherche, historique, absences) | ✓ | — |
+| Prestations (durée, prix, visibilité, coiffeuses) | ✓ | — |
+| Équipe (horaires propres, prestations, accès) | ✓ | — |
+| Horaires du salon et pause déjeuner | ✓ | — |
+| Congés : fermetures du salon et absences | ✓ | — |
+| Réglages (délais, infos légales) | ✓ | — |
+
+Le compteur d'absences d'une cliente est recalculé à chaque changement de statut.
+Les actions sont vérifiées deux fois : côté serveur (`requireAdmin`) et par les règles RLS de la base.
+
 ## Organisation du code
 
 ```

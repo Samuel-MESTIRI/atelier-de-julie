@@ -4,17 +4,12 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { requireStaff } from "@/lib/auth";
 import { logout } from "@/app/connexion/actions";
+import { AdminNav } from "./AdminNav";
 
 export const metadata: Metadata = { title: "Back-office", robots: { index: false } };
 
-// Menu : "adminOnly" = visible uniquement par Julie
-const NAV = [
-  { href: "/admin", label: "Planning", adminOnly: false },
-];
-
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const profile = await requireStaff();
-  const links = NAV.filter((l) => !l.adminOnly || profile.role === "admin");
 
   return (
     <>
@@ -30,14 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </form>
           </div>
         </div>
-        {/* Menu défilant horizontalement sur mobile */}
-        <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-2 text-sm">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="whitespace-nowrap rounded-full px-3 py-1.5 hover:bg-sand">
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+        <AdminNav isAdmin={profile.role === "admin"} />
       </header>
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{children}</main>
     </>

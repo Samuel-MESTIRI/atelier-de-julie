@@ -101,3 +101,11 @@ from (values
 ) as v(n, client_id, stylist_id, service_id, t, src)
 join days on days.n = v.n
 join services sv on sv.id = v.service_id::uuid;
+
+-- Historique : un rendez-vous passé de Léa, marqué « absente » (cohérent avec no_show_count = 1)
+insert into appointments (client_id, stylist_id, service_id, service_name, price_cents, starts_at, ends_at, status)
+select 'cccccccc-0000-0000-0000-000000000002', '22222222-2222-2222-2222-222222222222', id, name, price_cents,
+       ((pg_temp.paris_today() - 14) + time '15:00') at time zone 'Europe/Paris',
+       ((pg_temp.paris_today() - 14) + time '15:00') at time zone 'Europe/Paris' + make_interval(mins => duration_min),
+       'absente'
+from services where id = 'aaaaaaaa-0000-0000-0000-000000000001';

@@ -47,6 +47,12 @@ check(`ne voit que ses clientes (${sarahClients.length} sur 4)`, sarahClients.le
 await sarah.from("services").update({ price_cents: 1 }).eq("name", "Coupe femme");
 const price = (await anon.from("services").select("price_cents").eq("name", "Coupe femme").single()).data;
 check("ne peut pas modifier un prix", price?.price_cents === 3500);
+const statusChange = await sarah.from("appointments").update({ status: "annule" }).eq("stylist_id", "22222222-2222-2222-2222-222222222222").select();
+check("ne peut pas modifier un rendez-vous", (statusChange.data ?? []).length === 0);
+const absence = await sarah.from("stylist_absences").insert({ stylist_id: "22222222-2222-2222-2222-222222222222", start_at: "2030-01-01T09:00:00Z", end_at: "2030-01-01T10:00:00Z" });
+check("ne peut pas poser d'absence", Boolean(absence.error));
+const closure = await sarah.from("salon_closures").insert({ start_date: "2030-01-01", end_date: "2030-01-02" });
+check("ne peut pas fermer le salon", Boolean(closure.error));
 const promote = await sarah.from("profiles").update({ role: "admin" }).neq("id", "00000000-0000-0000-0000-000000000000").select();
 check("ne peut pas se donner le rôle admin", (promote.data ?? []).length === 0);
 

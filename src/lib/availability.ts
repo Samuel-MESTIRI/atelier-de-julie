@@ -32,6 +32,7 @@ export async function getAvailability(opts: {
   from: string;              // "AAAA-MM-JJ" inclus
   to: string;                // "AAAA-MM-JJ" inclus
   now?: Date;
+  staff?: boolean;           // rendez-vous saisi par le salon : pas de délai minimum ni maximum
 }): Promise<Map<string, DayAvailability>> {
   const supabase = createAdminClient();
   const now = opts.now ?? new Date();
@@ -46,12 +47,12 @@ export async function getAvailability(opts: {
 
   // Bornes : pas avant aujourd'hui, pas après le délai maximum
   const today = parisDate(now);
-  const lastDay = addDays(today, settings.max_advance_days);
+  const lastDay = addDays(today, opts.staff ? 365 : settings.max_advance_days);
   const from = opts.from < today ? today : opts.from;
   const to = opts.to > lastDay ? lastDay : opts.to;
   if (from > to) return result;
 
-  const earliest = now.getTime() + settings.min_notice_hours * 60 * MINUTE;
+  const earliest = now.getTime() + (opts.staff ? 0 : settings.min_notice_hours * 60 * MINUTE);
   const durationMs = service.duration_min * MINUTE;
   const stepMs = settings.slot_step_min * MINUTE;
   const rangeStart = parisToUtc(from, "00:00").toISOString();
