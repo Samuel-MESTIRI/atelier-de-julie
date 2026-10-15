@@ -1,0 +1,28 @@
+CADRE TECHNIQUE
+- **Framework** : Next.js avec TypeScript
+- **Style** : Tailwind CSS, en appliquant la charte de la section 7
+- **Base de données, connexion et fichiers** : Supabase
+- **Hébergement** : Netlify, mise en ligne automatique depuis GitHub
+- **Mobile d'abord** : chaque page doit être parfaitement utilisable sur téléphone
+- **Format français** : dates en JJ/MM/AAAA, heures en 24 h, fuseau Europe/Paris, prix en euros
+- **Sécurité** : règles d'accès Supabase (RLS) activées sur toutes les tables, aucune clé secrète dans le code ni sur GitHub, vérification des données côté serveur
+- **Légal** : page de mentions légales, politique de confidentialité, bandeau cookies si des cookies non essentiels sont utilisés
+- **Simplicité** : le moins de dépendances possible, un code lisible et commenté pour la maintenance
+- **Livrables** : un fichier README expliquant comment lancer et déployer le projet, et des données de test
+
+
+
+CLIENT
+Le client : Julie, « L’Atelier de Julie », salon de coiffure à Saint-Germain-en-Laye
+
+« Aujourd’hui, mes clientes m’appellent pour prendre rendez-vous, et je note tout dans un agenda papier. Je rate des appels quand je coiffe, et j’ai souvent des clientes qui ne viennent pas sans prévenir.
+
+Je voudrais que mes clientes puissent réserver en ligne, sur leur téléphone, sans créer de compte : elles choisissent une prestation, une coiffeuse et un créneau, puis donnent leur nom, leur téléphone et leur email. Elles reçoivent un email de confirmation et un rappel la veille. Elles peuvent annuler, mais pas moins de 24 h avant.
+
+On est trois coiffeuses : moi, Sarah et Inès. On est ouvertes du mardi au samedi, de 9 h à 19 h, fermées le lundi et le dimanche, avec trois semaines de congés en août.
+
+Mes prestations : coupe femme 45 min à 35 €, coupe homme 30 min à 22 €, couleur 1 h 30 à 65 €, brushing 30 min à 25 €.
+
+Moi, je veux pouvoir tout gérer : les prestations, les horaires, les congés, et voir le planning de la journée et de la semaine, par coiffeuse. Sarah et Inès doivent juste voir leur propre planning.
+
+J’aime bien les tons beige et vert sauge, quelque chose de doux et naturel. J’ai un logo. Le paiement en ligne, peut-être plus tard. »

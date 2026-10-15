@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   Charte graphique — L'Atelier de Julie
+   Tons beige et vert sauge, doux et naturels.
+   Les couleurs sont utilisables en classes Tailwind : bg-sage, text-ink…
+   ===================================================================== */
+@theme {
+  --color-cream: #faf6f0;      /* fond de page */
+  --color-sand: #f1e9dd;       /* surfaces, cartes secondaires */
+  --color-beige: #e3d5c1;      /* bordures */
+  --color-sage-light: #dfe5d7; /* fonds d'accent */
+  --color-sage: #8a9a7b;       /* vert sauge principal */
+  --color-sage-dark: #5b6b4f;  /* boutons, liens (contraste suffisant) */
+  --color-ink: #3b3630;        /* texte principal */
+  --color-muted: #776d61;      /* texte secondaire */
+  --color-danger: #a4473b;
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* ---------- Composants réutilisables -------------------------------- */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;            /* zone tactile confortable sur mobile */
+    padding: 0.625rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 600;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .btn-primary { background: var(--color-sage-dark); color: white; }
+  .btn-primary:hover { background: #4b5a41; }
+  .btn-secondary { border: 1px solid var(--color-beige); background: white; color: var(--color-ink); }
+  .btn-secondary:hover { border-color: var(--color-sage); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .card {
+    background: white;
+    border: 1px solid var(--color-beige);
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+
+  .label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.375rem; }
+  .input {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--color-beige);
+    border-radius: 0.75rem;
+    background: white;
+    font-size: 1rem;                /* 16 px : évite le zoom auto sur iPhone */
+  }
+  .input:focus { outline: 2px solid var(--color-sage); outline-offset: 1px; border-color: transparent; }
+}
