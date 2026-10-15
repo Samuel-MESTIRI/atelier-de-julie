@@ -1,7 +1,12 @@
-# Configuration Netlify (Next.js est détecté automatiquement)
+# Configuration Netlify
 [build]
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Moteur Next.js de Netlify : indispensable pour les pages dynamiques
+# (sans lui, Netlify sert le dossier .next comme un site statique → "Page not found")
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
