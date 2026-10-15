@@ -93,14 +93,57 @@ src/
     supabase/        clients Supabase (server = droits de la personne connectée,
                      admin = clé secrète, serveur uniquement)
     auth.ts          vérification du rôle
+    availability.ts  calcul des créneaux libres
     format.ts        formats français (dates, heures, prix)
+    time.ts          calculs d'heures en Europe/Paris
+    notifications.ts point de branchement des emails (inactif)
   proxy.ts           rafraîchit la session, protège /admin
 supabase/
-  migrations/        schéma de la base + règles RLS
+  migrations/        schéma, règles RLS, purge RGPD
   seed.sql           données de test
+  mise-en-service.sql nettoyage avant l'ouverture au public
 scripts/             outils base de données et tests
 ```
 
-## Déploiement (Netlify)
+## Déploiement (Netlify, depuis GitHub)
 
-_Section complétée à l'étape 4._
+1. **GitHub** : créer un dépôt privé et y pousser le projet.
+   ```bash
+   git remote add origin https://github.com/<compte>/atelier-julie.git
+   git push -u origin main
+   ```
+   `.env.local` n'est jamais envoyé (exclu par `.gitignore`).
+2. **Netlify** : *Add new site → Import an existing project → GitHub*, choisir le dépôt.
+   Les réglages de build sont lus dans [`netlify.toml`](netlify.toml) ; Next.js est détecté automatiquement.
+3. **Variables d'environnement** (*Site configuration → Environment variables*) :
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - `SUPABASE_SECRET_KEY` (cocher « Contains secret values »)
+
+   `DATABASE_URL` n'est **pas** nécessaire sur Netlify (scripts locaux uniquement).
+4. **Déployer.** Ensuite, chaque `git push` sur `main` met le site à jour automatiquement.
+5. **Nom de domaine** (facultatif) : *Domain management → Add a domain*.
+
+### Avant l'ouverture au public
+
+- [ ] Lancer [`supabase/mise-en-service.sql`](supabase/mise-en-service.sql) (supprime les rendez-vous et clientes de test)
+- [ ] Supprimer les comptes `*@atelier-julie.test` et créer le vrai compte de Julie (instructions dans le même fichier)
+- [ ] Régénérer la clé secrète Supabase (*Project Settings → API Keys*) et la mettre à jour sur Netlify
+- [ ] Compléter les réglages : adresse, téléphone, SIRET, nom légal (back-office → Réglages)
+- [ ] Remplacer le logo d'exemple ([`src/components/Logo.tsx`](src/components/Logo.tsx) et `src/app/icon.svg`)
+- [ ] Vérifier la région des données dans Supabase (*Project Settings → General*) : la politique de confidentialité indique « Union européenne »
+
+## Emails (à activer plus tard)
+
+Aucun email n'est envoyé pour l'instant. Tout est prêt dans [`src/lib/notifications.ts`](src/lib/notifications.ts) :
+confirmation et annulation sont déjà appelées au bon moment, et `sendReminders()` prépare le rappel de la veille.
+Pour activer : un compte [Resend](https://resend.com) (gratuit jusqu'à 3 000 emails/mois), les variables `RESEND_API_KEY`
+et `EMAIL_FROM`, puis décommenter l'appel dans `send()`. Le rappel quotidien se programme avec une
+*Scheduled Function* Netlify qui appelle `sendReminders()` chaque jour vers 18 h.
+
+## RGPD
+
+- Les clientes et leur historique sont supprimés automatiquement **3 ans après leur dernier rendez-vous**
+  (fonction `purge_old_clients()`, lancée chaque nuit par `pg_cron`, voir `supabase/migrations/003_retention.sql`).
+- Aucun cookie publicitaire ni de mesure d'audience : seul le cookie de connexion de l'équipe (essentiel), donc pas de bandeau cookies.
+- Les en-têtes de sécurité sont définis dans [`next.config.ts`](next.config.ts).

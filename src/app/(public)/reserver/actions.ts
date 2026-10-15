@@ -1,8 +1,10 @@
 "use server";
 // Actions serveur du parcours de réservation.
 // Toutes les données reçues du navigateur sont revérifiées ici.
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAvailability } from "@/lib/availability";
+import { notifyBooked } from "@/lib/notifications";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { addDays, isDateString, parisDate } from "@/lib/time";
 import { cleanEmail, cleanName, isUuid, normalizePhone } from "@/lib/validation";
@@ -94,6 +96,14 @@ export async function createBooking(_prev: BookingState, formData: FormData): Pr
     }
     return { error: "Une erreur est survenue, merci de réessayer." };
   }
+
+  // Email de confirmation (inactif pour l'instant, voir lib/notifications.ts)
+  const { data: stylistRow } = await supabase.from("stylists").select("name").eq("id", stylistId).single();
+  const origin = (await headers()).get("origin") ?? "";
+  await notifyBooked({
+    email, name, serviceName: service.name, startsAt: startsAt.toISOString(),
+    stylistName: stylistRow?.name ?? "", link: `${origin}/rdv/${appointment.cancel_token}`,
+  });
 
   redirect(`/rdv/${appointment.cancel_token}?nouveau=1`);
 }
